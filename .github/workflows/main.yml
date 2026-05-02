@@ -1,0 +1,33 @@
+name: Maven CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v3
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      # Kiểm tra code mới lần ban thay đổi code
+      - name: Clean and build with Maven
+        run: mvn clean test package
+
+      # Chạy bài kiểm thử (Unit Tests) để đảm bảo code không bị lỗi
+      - name: Run Unit Tests
+        run: mvn clean test
+
+      # Build ứng dụng (biên dịch code thành chương trình có thể chạy)
+      - name: Check code style (Google Java Style Guide)
+        run: mvn com.github.spotbugs:spotbugs-maven-plugin:check

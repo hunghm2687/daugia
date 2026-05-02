@@ -1,0 +1,81 @@
+.BackGround {
+    -fx-background-color: linear-gradient(to bottom left, #0052D4, #4364F7, #6FB1FC);
+}
+
+.Welcome {
+    -fx-font-size: 28px;
+    -fx-text-fill: #FFFFFF; /* Trắng tinh khiết */
+    -fx-font-weight: bold;
+}
+
+.SignIN {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2D3250;
+}
+
+.button-rounded {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+.text-field-capsule {
+    -fx-background-radius: 50;
+    -fx-padding: 0 20;
+    -fx-text-fill: #2D3250
+}
+.nut-tron-cuc-to{
+    -fx-text-fill: black;
+
+}
+.left-pane {
+    -fx-background-radius: 25 0 0 25;
+}
+.red-text{
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
+.glow-text {
+    -fx-font-family: "Montserrat ExtraBold", "Segoe UI", sans-serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+
+    -fx-effect: dropshadow(three-pass-box, #BD327D, 15, 0.5, 0, 0);
+}
+.signup-background {
+    -fx-background-color: linear-gradient(to bottom right, #2D3250, #424769, #7077A1, #BD327D);
+}
+.signup-button {
+    -fx-background-color: linear-gradient(to right, #BD327D, #FF607E);
+    -fx-background-radius: 25;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(189, 50, 125, 0.4), 15, 0, 0, 5);
+}
+.signup-label {
+    -fx-text-fill: white;
+    -fx-font-family: "Montserrat", "Segoe UI", sans-serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+.sign-up-label-sub {
+    -fx-text-fill: #A0A5B9;
+    -fx-font-size: 13px;
+}
+/* 3. Ô NHẬP LIỆU (Thiết kế tối giản như ảnh mẫu) */
+.text-field, .password-field {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Nền tối mờ */
+    -fx-background-radius: 15;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #7077A1;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 15;
+    -fx-padding: 10 15;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-border-color: #BD327D; /* Màu hồng tro chủ đạo */
+    -fx-effect: dropshadow(three-pass-box, rgba(189, 50, 125, 0.5), 10, 0, 0, 0);
+}

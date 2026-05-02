@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.auction.client.view.Main2Controller">
+
+    <stylesheets>
+        <String fx:value="@style.css" />
+    </stylesheets>
+
+    <!-- TOP: Search Bar -->
+    <top>
+        <HBox fx:id="searchBarHBox" styleClass="searchBarHBox" stylesheets="@style.css">
+            <Label fx:id="appTitleLabel" styleClass="appTitleLabel" stylesheets="@style.css" text="Đấu giá Team 10" />
+            <TextField fx:id="searchField" promptText="Tìm kiếm sản phẩm..." styleClass="searchField" stylesheets="@style.css" HBox.hgrow="ALWAYS" />
+            <Button fx:id="searchButton" onAction="#handleSearch" styleClass="searchButton" stylesheets="@style.css" text="Tìm kiếm" />
+        </HBox>
+    </top>
+
+    <!-- LEFT: Menu -->
+    <left>
+        <VBox fx:id="leftMenuVBox" styleClass="leftMenuVBox" stylesheets="@style.css">
+            <Button fx:id="homeButton" styleClass="menu-button" stylesheets="@style.css" text="Trang chủ" />
+            <Button fx:id="loginButton" styleClass="menu-button" stylesheets="@style.css" text="Đăng nhập" />
+            <Button fx:id="signupButton" styleClass="menu-button" stylesheets="@style.css" text="Đăng ký" />
+        </VBox>
+    </left>
+
+    <!-- CENTER: Products -->
+    <center>
+        <ScrollPane fx:id="scrollPane" styleClass="scrollPane" stylesheets="@style.css">
+            <StackPane fx:id="stackPaneProducts" styleClass="stackPaneProducts" stylesheets="@style.css">
+                <ImageView fx:id="backgroundImageView" preserveRatio="false" styleClass="backgroundImageView">
+                    <image>
+                        <Image url="@../../../../../images/img.png" />
+                    </image>
+                </ImageView>
+                <FlowPane fx:id="productsPane" styleClass="productsPane" stylesheets="@style.css" />
+            </StackPane>
+        </ScrollPane>
+    </center>
+</BorderPane>
