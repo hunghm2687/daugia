@@ -4,14 +4,10 @@ import com.example.auction.dao.UserDAO;
 import com.example.auction.server.ClientManager;
 import com.example.auction.server.ClientSession;
 import com.example.auction.server.UserSession;
-import com.example.auction.server.exception.RequestTypeException;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
-import com.example.auction.shared.entity.Role;
-import com.example.auction.shared.entity.User;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 public class LoginHandler extends RequestHandler {
     @Override

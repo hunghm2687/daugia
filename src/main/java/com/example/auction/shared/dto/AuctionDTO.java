@@ -80,7 +80,7 @@ import java.time.Instant;
  *    Time left: auctionDTO.endTime() - now
  */
 public record AuctionDTO(
-  Long id,
+  Long id, // id của auction là Long, còn long serialization = 1L th khác
   String sellerUsername,
   String itemName,
   Double startPrice,
@@ -89,7 +89,8 @@ public record AuctionDTO(
   Instant startTime,
   Instant endTime,
   String status,
-  Integer bidCount
+  Integer bidCount,
+  String itemImage
 ) implements Serializable {
   private static final long serialVersionUID = 1L;
 }

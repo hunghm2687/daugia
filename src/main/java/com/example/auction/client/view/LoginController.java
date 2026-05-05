@@ -1,11 +1,11 @@
 package com.example.auction.client.view;
 
+import com.example.auction.client.AppContext;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
 import com.example.auction.shared.entity.Role;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,8 +15,6 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.Scanner;
 
 public class LoginController {
     @FXML
@@ -26,85 +24,114 @@ public class LoginController {
     @FXML
     Button logInButton;
     @FXML
+    Button backBtn;
+    @FXML
     Label notification;
 
+//    @FXML
+//    public void initialize() {
+//        // tạo ràng buộc username kh dc để trống
+//        BooleanBinding notEmpty = emailTextField.textProperty().isEmpty();
+//
+//        // tạo ràng buộc password phải ít nhất 6 kí tự
+//        BooleanBinding checkPass = passwordField.textProperty().length().lessThan(6);
+//
+//        // nút đăng nhập chỉ dc bấm khi username kh trống và mk phải >=6 kí tự
+//        logInButton.disableProperty().bind(notEmpty.or(checkPass));
+//
+//        // Set action cho backBtn
+//        backBtn.setOnAction(e -> back());
+//    }
+
+    //    @FXML
+//    public void back(){
+//        try {
+//            // chuển đến màn hình chính
+//            SceneManager.getInstance().changeToScene("mainscreen2.fxml");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     @FXML
     public void initialize() {
-        // tạo ràng buộc username kh dc để trống
-        BooleanBinding notEmpty = emailTextField.textProperty().isEmpty();
+        System.out.println("LoginController initialized");
 
-        // tạo ràng buộc password phải ít nhất 6 kí tự
-        BooleanBinding checkPass = passwordField.textProperty().length().lessThan(6);
+        // Validation
+        BooleanBinding emailEmpty = emailTextField.textProperty().isEmpty();
+        BooleanBinding passwordShort = passwordField.textProperty().length().lessThan(6);
 
-        // nút đăng nhập chỉ dc bấm khi username kh trống và mk phải >=6 kí tự
-        logInButton.disableProperty().bind(notEmpty.or(checkPass));
+        // Button disable nếu validation fail
+        logInButton.disableProperty().bind(emailEmpty.or(passwordShort));
+
+        // SET ACTION TRONG initialize (KHÔNG dùng onAction trong FXML)
+        logInButton.setOnAction(e -> logIn());
+        backBtn.setOnAction(e -> back());
     }
+
     @FXML
-    public void back(){
+    private void back() {
         try {
-            // chuển đến màn hình chính
-            SceneManager.getInstance().changeToScene("mainscreen2.fxml");
+            SceneManager.getInstance().changeScene("mainscreen2.fxml");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
+
+    // Private method - không cần public
     @FXML
-    public void logIn(ActionEvent event) {
+    private void logIn() {
         String email = emailTextField.getText().trim();
         String password = passwordField.getText().trim();
 
-        // taạo thread mới ddeer gửi request tới server (kh block UI)
         Thread thread = new Thread(() -> {
-            try (Socket socket = new Socket("127.0.0.1", 5000);
-                 // stream gửi
-                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                 // stream nhận
-                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-                // Tạo UserDTO để gửi tới server
-                UserDTO userDTO = new UserDTO(
-                  "",
-                  password,                  // password
-                  email,                     // email
-                  Role.GUEST.name(),         // role (mặc định GUEST)
-                  "LOGIN"
-                );
+            try {
+                synchronized (AppContext.getInstance().getOut()) {
+                    ObjectOutputStream out = AppContext.getInstance().getOut();
+                    ObjectInputStream in = AppContext.getInstance().getIn();
 
-                MessageProtocol loginRequest = new MessageProtocol(
-                  "LOGIN",                // type
-                  userDTO,                // data
-                  null,                   // status (null for request)
-                  null                    // message (null for request)
-                );
+                    UserDTO userDTO = new UserDTO(
+                      "", password, email, Role.GUEST.name(), "LOGIN"
+                    );
 
-                // gửi UserDTO đến server
-                out.writeObject(loginRequest);
-                out.flush();  // đảm bảo dữ liệu dc gửi ngay lập tức
+                    MessageProtocol request = new MessageProtocol(
+                      "LOGIN", userDTO, null, null
+                    );
 
-                MessageProtocol response = (MessageProtocol) in.readObject();
+                    out.writeObject(request);
+                    out.flush();
 
-                System.out.println("Response received: " + response.type() +
-                  " status=" + response.status());
+                    MessageProtocol response = (MessageProtocol) in.readObject();
 
-                // Platform.runLater() - Cập nhật UI từ JavaFX thread, kh thể cập nhật UI từ thread khác
-                Platform.runLater(() -> {
-                    try {
+                    System.out.println("Response: " + response.type() + " - " + response.status());
+
+                    Platform.runLater(() -> {
                         if ("SUCCESS".equals(response.status())) {
-                            // TODO: Lưu UserDTO vào session
-                            // AuctionClientApp.setCurrentUser((UserDTO) response.data());
-                            SceneManager.getInstance().changeToScene("test-view.fxml");
+                            UserDTO user = (UserDTO) response.data();
+                            AppContext.getInstance().setCurrentUser(user);
+
+                            notification.setText("Đăng nhập thành công!");
+
+                            try {
+                                Thread.sleep(1000);
+                                SceneManager.getInstance().changeScene("mainscreen2.fxml");
+                            } catch (InterruptedException | IOException e) {
+                                e.printStackTrace();
+                            }
                         } else {
-                            notification.setText("Tài khoản mật khẩu không chính xác" + response.message());
+                            notification.setText( response.message());
                             passwordField.clear();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            } catch (IOException | ClassNotFoundException e) {
-                Platform.runLater(() -> notification.setText("Lỗi kết nối server!"));
+                    });
+                }
+            } catch (Exception e) {
+                Platform.runLater(() ->
+                  notification.setText("Lỗi kết nối server!")
+                );
                 e.printStackTrace();
             }
         });
-        thread.setDaemon(true);  // Daemon thread - ứng dụng sẽ thoát khi main thread thoát
+
+        thread.setDaemon(true);
         thread.start();
-    }};
+    }
+}

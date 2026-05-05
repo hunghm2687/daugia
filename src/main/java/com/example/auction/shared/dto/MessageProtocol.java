@@ -26,7 +26,6 @@ import java.io.Serializable;
  * case "BID" → BidHandler
  * }
  * → Không cần instanceof check
- * <p>
  * 3. Scale:
  * - Thêm message type mới? Chỉ thêm case trong switch
  * - Không phải thay đổi protocol

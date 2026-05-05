@@ -7,8 +7,6 @@ import com.example.auction.shared.dto.BidDTO;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.entity.Role;
 
-import java.lang.ref.Cleaner;
-
 /**
  * ╔════════════════════════════════════════════════════════════╗
  * ║ BidHandler - REAL-TIME BIDDING HANDLER                      ║
@@ -164,6 +162,4 @@ public class BidHandler extends RequestHandler {
       e.printStackTrace();
     }
   }
-
-
 }

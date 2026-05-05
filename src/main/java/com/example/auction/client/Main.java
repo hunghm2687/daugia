@@ -1,6 +1,5 @@
 package com.example.auction.client;
 
-import com.example.auction.client.view.SceneManager;
 import javafx.application.Application;
 
 public class Main {

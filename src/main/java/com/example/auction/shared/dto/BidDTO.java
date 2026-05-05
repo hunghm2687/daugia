@@ -51,7 +51,6 @@ import java.time.Instant;
  * save database
  * broadcast(MessageProtocol("NEW_BID", bidDTO, "SUCCESS", null))
  * }
- * <p>
  * 3. Tất cả clients nhận:
  * MessageProtocol msg = readObject()
  * if ("NEW_BID".equals(msg.type())) {

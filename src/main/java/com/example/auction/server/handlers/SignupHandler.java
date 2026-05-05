@@ -1,16 +1,12 @@
 package com.example.auction.server.handlers;
 
 import com.example.auction.dao.UserDAO;
-import com.example.auction.server.ClientManager;
 import com.example.auction.server.ClientSession;
 import com.example.auction.server.UserSession;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
-import com.example.auction.shared.entity.Role;
-import com.example.auction.shared.entity.User;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 public class SignupHandler extends RequestHandler {
     @Override
@@ -19,6 +15,9 @@ public class SignupHandler extends RequestHandler {
         UserDTO userDTO = (UserDTO) message.data();
 
         try {
+            System.out.println("\n🔍 Step 1: Checking if email exists...");
+            boolean emailExists = UserDAO.getInstance().emailIsExit(userDTO.email());
+            System.out.println("  Email exists? " + emailExists);
             if (UserDAO.getInstance().emailIsExit(userDTO.email())) {
                 // Email đã tồn tại
                 // GỌI sendResponse()
@@ -30,9 +29,8 @@ public class SignupHandler extends RequestHandler {
                 ));
                 return;
             }
-            UserDAO.getInstance().addUser(userDTO);
-
             System.out.println("User registered: " + userDTO.username());
+            UserDAO.getInstance().addUser(userDTO);
 
             // RESPONSE: Send success
             // GỌI sendResponse()
@@ -45,6 +43,11 @@ public class SignupHandler extends RequestHandler {
 
         } catch (Exception e) {
             // GỌI sendResponse()
+            System.out.println("\n❌ EXCEPTION in SignupHandler:");
+            System.out.println("  Exception class: " + e.getClass().getName());
+            System.out.println("  Message: " + e.getMessage());
+            System.out.println("  Stack trace:");
+            e.printStackTrace();
             sendResponse(session, new MessageProtocol(
               "SIGNUP",
               null,

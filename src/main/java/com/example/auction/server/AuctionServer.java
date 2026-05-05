@@ -1,11 +1,6 @@
 package com.example.auction.server;
 
-import com.example.auction.server.exception.RequestTypeException;
-import com.example.auction.server.handlers.HandlerFactory;
-import com.example.auction.server.handlers.RequestHandler;
-import com.example.auction.shared.dto.UserDTO;
-
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executors;

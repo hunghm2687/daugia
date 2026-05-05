@@ -1,24 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="signup-background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.auction.client.view.SignupController">
-   <children>
-      <TextField fx:id="usernameTF" layoutX="268.0" layoutY="112.0" prefHeight="25.0" prefWidth="134.0" styleClass="text-field" stylesheets="@style.css" />
-      <Label alignment="CENTER_RIGHT" layoutX="155.0" layoutY="112.0" prefHeight="30.0" prefWidth="96.0" styleClass="glow-text" stylesheets="@style.css" text="Username" />
-      <TextField fx:id="emailTF" layoutX="268.0" layoutY="229.0" prefHeight="39.0" prefWidth="134.0" styleClass="text-field-capsule" stylesheets="@style.css" />
-      <Label alignment="CENTER_RIGHT" layoutX="155.0" layoutY="175.0" prefHeight="30.0" prefWidth="96.0" styleClass="glow-text" stylesheets="@style.css" text="Password" />
-      <TextField fx:id="passwordF" layoutX="268.0" layoutY="171.0" prefHeight="39.0" prefWidth="134.0" styleClass="text-field-capsule" stylesheets="@style.css" />
-      <Label alignment="CENTER_RIGHT" layoutX="155.0" layoutY="233.0" prefHeight="30.0" prefWidth="96.0" styleClass="glow-text" stylesheets="@style.css" text="Email" />
-      <Button fx:id="signUpButton" layoutX="278.0" layoutY="312.0" mnemonicParsing="false" onAction="#signUp" styleClass="signup-button" stylesheets="@style.css" text="Sign up" />
-      <Label layoutX="240.0" layoutY="41.0" styleClass="signup-label" stylesheets="@style.css" text="Đăng kí">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </Label>
-   </children>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.auction.client.view.SignupController">
+
+   <center>
+      <VBox alignment="CENTER" spacing="20" style="-fx-padding: 50;">
+
+         <Label text="📝 ĐĂNG KÝ"
+                style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+         <Separator/>
+
+         <!-- Username -->
+         <VBox spacing="5">
+            <Label text="👤 Tên đăng nhập:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="usernameTF"
+                       promptText="Nhập tên đăng nhập"
+                       prefWidth="300"
+                       prefHeight="35"/>
+         </VBox>
+
+         <!-- Email -->
+         <VBox spacing="5">
+            <Label text="📧 Email:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="emailTF"
+                       promptText="Nhập email của bạn"
+                       prefWidth="300"
+                       prefHeight="35"/>
+         </VBox>
+
+         <!-- Password -->
+         <VBox spacing="5">
+            <Label text="🔑 Mật khẩu:" style="-fx-font-weight: bold;"/>
+            <PasswordField fx:id="passwordF"
+                           promptText="Nhập mật khẩu (tối thiểu 6 ký tự)"
+                           prefWidth="300"
+                           prefHeight="35"/>
+         </VBox>
+
+         <!-- Message -->
+         <Label fx:id="messageLabel"
+                style="-fx-font-size: 11; -fx-text-fill: red;"/>
+
+         <!-- Buttons -->
+         <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="signupBtn"
+                    text="📝 Đăng ký"
+                    style="-fx-padding: 10 40; -fx-font-size: 13;"
+                    prefWidth="150"/>
+            <Button fx:id="backBtn"
+                    text="← Quay lại"
+                    style="-fx-padding: 10 40; -fx-font-size: 13;"
+                    onAction="#handleBack"/>
+         </HBox>
+
+         <Separator/>
+
+         <Label text="Đã có tài khoản? Đăng nhập ngay!"
+                style="-fx-text-fill: #3498db; -fx-font-size: 11;"/>
+      </VBox>
+   </center>
+</BorderPane>

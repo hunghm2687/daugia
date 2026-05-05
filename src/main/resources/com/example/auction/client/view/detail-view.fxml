@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.auction.client.view.DetailController">
+
+    <!-- TOP: Back Button -->
+    <top>
+        <HBox style="-fx-background-color: #ecf0f1; -fx-padding: 10;">
+            <Button fx:id="backBtn" text="← Quay lại" style="-fx-padding: 5 15;"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER: Product Details + Bid -->
+    <center>
+        <HBox spacing="20" style="-fx-padding: 20;">
+
+            <!-- LEFT: Product Image -->
+            <VBox alignment="TOP_CENTER" prefWidth="350">
+                <ImageView fx:id="itemImage"
+                           fitWidth="320"
+                           fitHeight="320"
+                           preserveRatio="true"
+                           style="-fx-border-color: #ddd;"/>
+            </VBox>
+
+            <!-- RIGHT: Product Info + Bid Form -->
+            <VBox spacing="15" prefWidth="400">
+
+                <!-- Product Info -->
+                <VBox spacing="10" style="-fx-border-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5;">
+                    <Label fx:id="itemName"
+                           style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                    <HBox spacing="50">
+                        <VBox spacing="3">
+                            <Label text="💰 Giá khởi điểm:" style="-fx-font-weight: bold; -fx-font-size: 11;"/>
+                            <Label fx:id="startPrice" style="-fx-font-size: 14; -fx-text-fill: #e74c3c;"/>
+                        </VBox>
+                        <VBox spacing="3">
+                            <Label text="🔝 Giá cao nhất:" style="-fx-font-weight: bold; -fx-font-size: 11;"/>
+                            <Label fx:id="currentBid" style="-fx-font-size: 14; -fx-text-fill: #27ae60;"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="currentBidder" style="-fx-font-size: 12;"/>
+                    <Label fx:id="seller" style="-fx-font-size: 12;"/>
+                    <Label fx:id="status" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Bid Form -->
+                <VBox spacing="10" style="-fx-border-color: #3498db; -fx-padding: 15; -fx-border-radius: 5;">
+                    <Label text="💵 ĐẶT GIÁ" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+
+                    <VBox spacing="5">
+                        <Label text="Số tiền:" style="-fx-font-weight: bold;"/>
+                        <TextField fx:id="bidAmount"
+                                   promptText="Nhập số tiền"
+                                   prefHeight="35"
+                                   style="-fx-font-size: 13;"/>
+                    </VBox>
+
+                    <Button fx:id="placeBidBtn"
+                            text="💵 Đặt giá"
+                            style="-fx-padding: 12; -fx-font-size: 13;"
+                            prefHeight="40"/>
+
+                    <Label fx:id="messageLabel"
+                           style="-fx-font-size: 11; -fx-text-fill: red;"
+                           wrapText="true"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

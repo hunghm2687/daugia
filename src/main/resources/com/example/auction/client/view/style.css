@@ -1,81 +1,167 @@
-.BackGround {
-    -fx-background-color: linear-gradient(to bottom left, #0052D4, #4364F7, #6FB1FC);
+/* Global Styles */
+* {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.Welcome {
-    -fx-font-size: 28px;
-    -fx-text-fill: #FFFFFF; /* Trắng tinh khiết */
-    -fx-font-weight: bold;
+.root {
+    -fx-font-size: 12;
+    -fx-background-color: #ecf0f1;
 }
 
-.SignIN {
-    -fx-font-size: 15px;
-    -fx-text-fill: #2D3250;
-}
-
-.button-rounded {
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-}
-
-.text-field-capsule {
-    -fx-background-radius: 50;
-    -fx-padding: 0 20;
-    -fx-text-fill: #2D3250
-}
-.nut-tron-cuc-to{
-    -fx-text-fill: black;
-
-}
-.left-pane {
-    -fx-background-radius: 25 0 0 25;
-}
-.red-text{
-    -fx-text-fill: red;
-    -fx-font-weight: bold;
-}
-.glow-text {
-    -fx-font-family: "Montserrat ExtraBold", "Segoe UI", sans-serif;
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-
-    -fx-effect: dropshadow(three-pass-box, #BD327D, 15, 0.5, 0, 0);
-}
-.signup-background {
-    -fx-background-color: linear-gradient(to bottom right, #2D3250, #424769, #7077A1, #BD327D);
-}
-.signup-button {
-    -fx-background-color: linear-gradient(to right, #BD327D, #FF607E);
-    -fx-background-radius: 25;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+/* Buttons */
+.button {
+    -fx-padding: 8 16;
+    -fx-border-radius: 4;
+    -fx-font-size: 12;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(189, 50, 125, 0.4), 15, 0, 0, 5);
-}
-.signup-label {
     -fx-text-fill: white;
-    -fx-font-family: "Montserrat", "Segoe UI", sans-serif;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-}
-.sign-up-label-sub {
-    -fx-text-fill: #A0A5B9;
-    -fx-font-size: 13px;
-}
-/* 3. Ô NHẬP LIỆU (Thiết kế tối giản như ảnh mẫu) */
-.text-field, .password-field {
-    -fx-background-color: rgba(255, 255, 255, 0.1); /* Nền tối mờ */
-    -fx-background-radius: 15;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: #7077A1;
-    -fx-border-color: rgba(255, 255, 255, 0.2);
-    -fx-border-radius: 15;
-    -fx-padding: 10 15;
 }
 
-.text-field:focused, .password-field:focused {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-    -fx-border-color: #BD327D; /* Màu hồng tro chủ đạo */
-    -fx-effect: dropshadow(three-pass-box, rgba(189, 50, 125, 0.5), 10, 0, 0, 0);
+.button {
+    -fx-background-color: #3498db;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.button:pressed {
+    -fx-background-color: #1f618d;
+}
+
+/* Primary Buttons */
+.button:default {
+    -fx-background-color: #27ae60;
+}
+
+.button:default:hover {
+    -fx-background-color: #229954;
+}
+
+/* Disabled Buttons */
+.button:disabled {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: #7f8c8d;
+    -fx-opacity: 0.6;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-padding: 8;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+    -fx-font-size: 12;
+}
+
+.text-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2;
+}
+
+/* Password Fields */
+.password-field {
+    -fx-padding: 8;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+}
+
+.password-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: #2c3e50;
+}
+
+/* VBox / HBox */
+.vbox, .hbox {
+    -fx-spacing: 10;
+}
+
+/* Product Card */
+.product-card {
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 8;
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 1, 1);
+}
+
+.product-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 2, 2);
+    -fx-cursor: hand;
+}
+
+.product-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-text-fill: #2c3e50;
+}
+
+.product-price {
+    -fx-font-size: 14;
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+.product-button {
+    -fx-padding: 8;
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-border-radius: 4;
+}
+
+.product-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Separators */
+.separator {
+    -fx-border-color: #bdc3c7;
+}
+
+/* Menus */
+.menu-bar {
+    -fx-background-color: #34495e;
+}
+
+.menu-item {
+    -fx-text-fill: #ecf0f1;
+}
+
+/* Scroll Bars */
+.scroll-bar {
+    -fx-background-color: #ecf0f1;
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #95a5a6;
+}
+
+/* Error Messages */
+.error-label {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+/* Success Messages */
+.success-label {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
 }

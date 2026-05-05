@@ -82,31 +82,31 @@ public class ClientSession implements Runnable {
 
   @Override
   public void run() {
-     try {
-       // chặp chờ message từ client
-       while (connected) {
-         // readObject() -> chặp chờ message
-         // khi client gửi -> gửi về
-         MessageProtocol msg = (MessageProtocol) in.readObject();
+    try {
+      // chặp chờ message từ client
+      while (connected) {
+        // readObject() -> chặp chờ message
+        // khi client gửi -> gửi về
+        MessageProtocol msg = (MessageProtocol) in.readObject();
 
-         String user = currentUserSession != null ? currentUserSession.getUserName() : "anonymous";
-         System.out.println("Message from " + user + ": " + msg.type());
+        String user = currentUserSession != null ? currentUserSession.getUserName() : "GUEST";
+        System.out.println("Message from " + user + ": " + msg.type());
 
-         // xử lý message
-         handleMessage(msg);
-       }
-     }
-     catch (EOFException e) {
-       // client close connection -> EOF
-       System.out.println("Client disconnected");
-     }
-     catch (IOException | ClassNotFoundException e) {
-       System.out.println("Error: " + e.getMessage());
-     }
-     finally {
-       // cleanup: đóng connection, remove từ ClientManager
-       disconnect();
-     }
+        // xử lý message
+        handleMessage(msg);
+      }
+    }
+    catch (EOFException e) {
+      // client close connection -> EOF
+      System.out.println("Client disconnected");
+    }
+    catch (IOException | ClassNotFoundException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+    finally {
+      // cleanup: đóng connection, remove từ ClientManager
+      disconnect();
+    }
   }
 
   /**

@@ -37,7 +37,7 @@ public class ClientManager {
 
   private ClientManager() {};
 
-  public static synchronized ClientManager getInstance() {
+  public static ClientManager getInstance() {
     if (instance == null) {
       synchronized (ClientManager.class) {
         if (instance == null) {
@@ -194,7 +194,7 @@ public class ClientManager {
    * 6. Tất cả clients nhận → deserialize MessageProtocol
    * 7. Tất cả clients thấy "NEW_BID" type → update UI
    * 8. All UIs show: Current bid = 500
-   * 9. REAL-TIME SYNC! ✅
+   * 9. REAL-TIME SYNC!
    */
   public void broadcast(MessageProtocol message) {
     System.out.println("BROADCAST: " + message.type() +

@@ -12,6 +12,12 @@ import java.time.Instant;
  * - Dùng trong server logic (handlers, managers)
  * - KHÔNG gửi qua network
  *
+ * UserSession - Lưu user info trên SERVER
+ * Khác với UserDTO (client dùng)
+ * Lưu khi user login
+ * Xóa khi user logout/disconnect
+ *
+ *
  * VÌ SAO CẦN?
  * - Server cần track user session
  * - Handlers, DAO sử dụng UserSession
@@ -41,8 +47,6 @@ public class UserSession implements Serializable {
     private static final long serialVersionUID = 1L;
     private String id, userName,email;
     private Role role; // "BIDDER" , "ADMIN" , "GUEST"
-    private boolean isLoggedIn; // kiem tra dang nhap
-    private String requestType; // chi co "LOG IN" hoac "SIGN IN"
     private Instant loginTime;
 
     public UserSession(String id, String username, String email, Role role) {
@@ -51,7 +55,6 @@ public class UserSession implements Serializable {
         this.email = email;
         this.role = role;
         this.loginTime = Instant.now();
-        this.isLoggedIn = true;
     }
     public String getId() {
         return id;
@@ -65,20 +68,17 @@ public class UserSession implements Serializable {
         return userName;
     }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public long getSessionDurationSeconds() {
+        return java.time.temporal.ChronoUnit.SECONDS.between(loginTime, Instant.now());
     }
 
     public Instant getLoginTime() {
         return loginTime;
-    }
-
-    public String getRequestType() {
-        return requestType;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     @Override
@@ -89,7 +89,6 @@ public class UserSession implements Serializable {
           ", email='" + email + '\'' +
           ", role='" + role + '\'' +
           ", loginTime=" + loginTime +
-          ", isLoggedIn=" + isLoggedIn +
           '}';
     }
 

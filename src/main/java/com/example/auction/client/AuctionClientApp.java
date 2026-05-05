@@ -7,25 +7,45 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
 // Đây sẽ là nơi load file giao diện (FXML) đầu tiên (như màn hình đăng nhập)
 public class AuctionClientApp extends Application {
+    @Override
     public void start(Stage stage) throws IOException {
-        // FXMLLoader - Tải file FXML (giao diện XML)
-        // getResource() - tìm file trong thư mục resources của dự án
-        // Trỏ đường dẫn đến file fxml trong resources
-        FXMLLoader fxmlLoader = new FXMLLoader(AuctionClientApp.class.getResource("/com/example/auction/client/view/signup-view.fxml"));
-        // Tạo Scene (Cảnh) chứa giao diện, kích thước 320x240
-        Scene scene = new Scene(fxmlLoader.load());
-        // Cài đặt Stage (Sân khấu/Cửa sổ ứng dụng)
-        // SceneManager - Lớp quản lý scenes (để dễ chuyển đổi giữa các màn hình)
-        // getInstance() - Singleton pattern (chỉ có 1 instance duy nhất)
-        // setStage() - lưu tham chiếu đến cửa sổ chính
-        SceneManager.getInstance().setStage(stage);
-        SceneManager.getInstance().changeToScene("mainscreen2.fxml");
-        stage.setTitle("Phần mềm đấu giá - Team 10");
+        // Init singleton
+        SceneManager.getInstance().setPrimaryStage(stage);
+
+        // Connect to server
+        try {
+            AppContext.getInstance().connectToServer("127.0.0.1", 5000);
+        } catch (Exception e) {
+            System.err.println("Cannot connect to server!");
+            e.printStackTrace();
+            return;
+        }
+
+        // Load main screen
+        FXMLLoader loader = new FXMLLoader(
+          getClass().getResource("/com/example/auction/client/view/mainscreen2.fxml")
+        );
+        Scene scene = new Scene(loader.load(), 1200, 700);
+
+        stage.setTitle("Phần mềm Đấu giá - Team 10");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setResizable(false);
+
+        // Cleanup on exit
+        stage.setOnCloseRequest(e -> {
+            AppContext.getInstance().logout();
+            AppContext.getInstance().closeConnection();
+            System.exit(0);
+        });
+
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
     }
 }

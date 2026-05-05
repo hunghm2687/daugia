@@ -3,7 +3,6 @@ package com.example.auction.dao;
 import com.example.auction.server.UserSession;
 import com.example.auction.shared.dto.UserDTO;
 import com.example.auction.shared.entity.Role;
-import com.example.auction.shared.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 // Chi danh cho cac thong tin lien quan den user
 public class UserDAO extends BaseDAO {
-    static private UserDAO instance = null;
+    private static UserDAO instance;
 
     private UserDAO() {
     }
@@ -53,9 +52,9 @@ public class UserDAO extends BaseDAO {
 
         // Kiểm tra: email chưa tồn tại mới thêm
         if (!emailIsExit(userDTO.email())) {
+            System.out.println("  Email not exists, proceeding to INSERT...");
             try (Connection connection = getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
                 // xét các tham số
                 preparedStatement.setString(1, UUID.randomUUID().toString());
                 preparedStatement.setString(2, userDTO.email());
@@ -64,7 +63,8 @@ public class UserDAO extends BaseDAO {
                 preparedStatement.setString(5, userDTO.role());
 
                 // thực thi INSERT
-                preparedStatement.executeUpdate();
+                int rows = preparedStatement.executeUpdate();
+                System.out.println(" User inserted: " + rows + " row(s)");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

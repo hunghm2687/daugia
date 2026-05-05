@@ -29,6 +29,7 @@ public abstract class HandlerFactory {
         handlers.put("LOGIN" , new LoginHandler());
         handlers.put("SIGNUP" , new SignupHandler());
         handlers.put("BID", new BidHandler());
+        handlers.put("GET_PRODUCTS_LIST", new GetProductsHandler());
         // sau này thêm delete account hoặc reset password thì thêm vào đây!
     }
 
