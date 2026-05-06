@@ -37,8 +37,8 @@ public class SceneManager { // singleton để chỉ có 1 stage trong ứng d�
 //        // taoj fmxl và scene mới và thay đổi stage bằng scene mới
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/auction/client/view/"+fxml));
 //        Scene scene = new Scene(fxmlLoader.load());
-////        stage.setScene(scene);
-////        stage.show();
+    ////        stage.setScene(scene);
+    ////        stage.show();
 //    }
 //    // MỚI
 //    // Load scene đơn giản

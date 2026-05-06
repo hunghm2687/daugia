@@ -1,60 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.auction.client.view.LoginController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.auction.client.view.LoginController"
+            style="-fx-font-family: 'Arial'; -fx-font-size: 12;">
 
     <center>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 50;">
+        <VBox spacing="20"
+              style="-fx-padding: 50; -fx-alignment: CENTER; -fx-background-color: #f5f5f5;"
+              prefHeight="400" prefWidth="500">
 
-            <Label text="🔐 ĐĂNG NHẬP"
-                   style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="🔐 Đăng Nhập"
+                   style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #e74c3c; -fx-alignment: CENTER;"/>
 
-            <Separator/>
-
-            <!-- Email -->
             <VBox spacing="5">
-                <Label text="📧 Email:" style="-fx-font-weight: bold;"/>
+                <Label text="Email:" style="-fx-font-weight: bold;"/>
                 <TextField fx:id="emailTextField"
                            promptText="Nhập email của bạn"
-                           prefWidth="300"
-                           prefHeight="35"/>
+                           style="-fx-padding: 10; -fx-font-size: 12; -fx-border-radius: 5;"/>
             </VBox>
 
-            <!-- Password -->
             <VBox spacing="5">
-                <Label text="🔑 Mật khẩu:" style="-fx-font-weight: bold;"/>
+                <Label text="Mật khẩu:" style="-fx-font-weight: bold;"/>
                 <PasswordField fx:id="passwordField"
-                               promptText="Nhập mật khẩu (tối thiểu 6 ký tự)"
-                               prefWidth="300"
-                               prefHeight="35"/>
+                               promptText="Nhập mật khẩu"
+                               style="-fx-padding: 10; -fx-font-size: 12; -fx-border-radius: 5;"/>
             </VBox>
 
-            <!-- Message -->
             <Label fx:id="notification"
-                   style="-fx-font-size: 11; -fx-text-fill: red;"/>
+                   text=""
+                   style="-fx-text-fill: red; -fx-font-size: 12;"/>
 
-            <!-- Buttons -->
-            <HBox spacing="10" alignment="CENTER">
-                <!-- ✅ XÓA onAction="#logIn" -->
-                <Button fx:id="logInButton"
-                        text="🔐 Đăng nhập"
-                        style="-fx-padding: 10 40; -fx-font-size: 13;"
-                        prefWidth="150"/>
-                <!-- ✅ XÓA onAction="#back" -->
-                <Button fx:id="backBtn"
-                        text="← Quay lại"
-                        style="-fx-padding: 10 40; -fx-font-size: 13;"/>
-            </HBox>
+            <Button fx:id="logInButton"
+                    text="Đăng Nhập"
+                    style="-fx-padding: 12; -fx-font-size: 14; -fx-cursor: hand; -fx-text-fill: white; -fx-background-color: #e74c3c; -fx-border-radius: 5;"/>
 
-            <Separator/>
-
-            <Label text="Chưa có tài khoản? Đăng ký ngay!"
-                   style="-fx-text-fill: #3498db; -fx-font-size: 11;"/>
+            <Button fx:id="backBtn"
+                    text="← Quay lại"
+                    style="-fx-padding: 10; -fx-font-size: 12; -fx-cursor: hand; -fx-background-color: white; -fx-border-color: #ddd;"/>
         </VBox>
     </center>
 </BorderPane>

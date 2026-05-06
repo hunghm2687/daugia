@@ -1,12 +1,15 @@
 package com.example.auction.client.view;
 
 import com.example.auction.client.AppContext;
+import com.example.auction.server.ClientSession;
+import com.example.auction.server.UserSession;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
 import com.example.auction.shared.entity.Role;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +18,7 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class SignupController {
     @FXML
@@ -35,8 +39,8 @@ public class SignupController {
         BooleanBinding notEmpty = usernameTF.textProperty().isEmpty();
         BooleanBinding checkPass = passwordF.textProperty().length().lessThan(6);
         BooleanBinding checkEmail = Bindings.createBooleanBinding(() ->
-                        emailTF.getText().contains("@") && emailTF.getText().contains("."),
-                emailTF.textProperty());
+            emailTF.getText().contains("@") && emailTF.getText().contains("."),
+          emailTF.textProperty());
 
         // Nút sign up chỉ bật khi: username không trống AND pass >= 6 ký tự AND email hợp lệ
         signupBtn.disableProperty().bind(notEmpty.or(checkPass).or(checkEmail.not()));
@@ -55,7 +59,7 @@ public class SignupController {
             e.printStackTrace();
         }
     }
-//    @FXML
+    //    @FXML
 //    public void back(){
 //        try {
 //            SceneManager.getInstance().changeScene("mainscreen2.fxml");
@@ -77,7 +81,7 @@ public class SignupController {
                     ObjectInputStream in = AppContext.getInstance().getIn();
 
                     UserDTO userDTO = new UserDTO(
-                      username, password, email, Role.MEMBER.name(), "SIGNUP"
+                      username, password, email, Role.MEMBER.name()
                     );
 
                     MessageProtocol request = new MessageProtocol(

@@ -4,18 +4,24 @@ import com.example.auction.client.AppContext;
 import com.example.auction.shared.dto.AuctionDTO;
 import com.example.auction.shared.dto.BidDTO;
 import com.example.auction.shared.dto.MessageProtocol;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class DetailController {
 
@@ -29,6 +35,10 @@ public class DetailController {
   @FXML private Label currentBidder;
   @FXML private Label seller;
   @FXML private Label status;
+  @FXML private Label startTime;
+  @FXML private Label endTime;
+  @FXML private VBox infoVBox;
+  @FXML private Label countDown;
 
   @FXML private TextField bidAmount;
   @FXML private Button placeBidBtn;
@@ -46,9 +56,16 @@ public class DetailController {
 
   @FXML
   public void initialize() {
+    startTime = new Label();
+    endTime = new Label();
+    countDown = new Label();
+    if (infoVBox != null) {
+      infoVBox.getChildren().addAll(startTime, endTime , countDown);
+    }
     if (selectedAuction != null) {
       displayAuctionInfo();
     }
+
 
     placeBidBtn.setOnAction(e -> handlePlaceBid());
     backBtn.setOnAction(e -> {
@@ -69,6 +86,15 @@ public class DetailController {
         selectedAuction.currentHighestBidderUsername() : "Chưa có"));
     seller.setText("Người bán: " + selectedAuction.sellerUsername());
     status.setText("Trạng thái: " + selectedAuction.status());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+    startTime.setText("Thời gian bắt đầu: " +
+      selectedAuction.startTime().atZone(ZoneId.systemDefault()).format(formatter));
+
+    endTime.setText("Thời gian kết thúc: " +
+      selectedAuction.endTime().atZone(ZoneId.systemDefault()).format(formatter));
+
+    startCountdown(countDown , LocalDateTime.ofInstant(selectedAuction.endTime(), ZoneId.systemDefault()));
 
     // Display image
     if (selectedAuction.itemImage() != null && !selectedAuction.itemImage().isEmpty()) {
@@ -179,5 +205,33 @@ public class DetailController {
 
     thread.setDaemon(true);
     thread.start();
+  }
+  public void startCountdown(Label labelCountdown, LocalDateTime endTime) {
+    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+      LocalDateTime now = LocalDateTime.now();
+      java.time.Duration duration = java.time.Duration.between(now, endTime);
+
+      if (duration.isNegative() || duration.isZero()) {
+        labelCountdown.setText("ĐÃ KẾT THÚC");
+        labelCountdown.setStyle("-fx-text-fill: #7f8c8d;"); // Màu xám khi hết giờ
+      } else {
+        long days = duration.toDays();
+        long hours = duration.toHoursPart();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+
+        // Hiển thị định dạng: 02 ngày 05:30:15
+        String timeLeft = String.format("%02d ngày %02d giờ %02d phút %02d giây",
+          days, hours, minutes, seconds);
+        labelCountdown.setText(timeLeft);
+
+        // Hiệu ứng khẩn cấp: Nếu còn dưới 1 giờ thì đổi sang màu đỏ nhấp nháy
+        if (days == 0 && hours == 0) {
+          labelCountdown.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+        }
+      }
+    }));
+    timeline.setCycleCount(Animation.INDEFINITE);
+    timeline.play();
   }
 }

@@ -280,8 +280,7 @@ public class ClientManager {
           userSession.getUserName(),
           null,  // không gửi password
           userSession.getEmail(),
-          userSession.getRole().name(),  // Convert Role enum → String
-          "ONLINE"
+          userSession.getRole().name()  // Convert Role enum → String
         );
         users.add(userDTO);
       }

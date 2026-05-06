@@ -1,11 +1,13 @@
 package com.example.auction.client.view;
 
 import com.example.auction.client.AppContext;
+import com.example.auction.client.AuctionClientApp;
 import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
 import com.example.auction.shared.entity.Role;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +17,8 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class LoginController {
     @FXML
@@ -90,7 +94,7 @@ public class LoginController {
                     ObjectInputStream in = AppContext.getInstance().getIn();
 
                     UserDTO userDTO = new UserDTO(
-                      "", password, email, Role.GUEST.name(), "LOGIN"
+                      "", password, email, Role.GUEST.name()
                     );
 
                     MessageProtocol request = new MessageProtocol(

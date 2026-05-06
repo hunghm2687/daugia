@@ -32,8 +32,7 @@ public record UserDTO(
   String username,
   String password,
   String email,
-  String role,
-  String requestType
+  String role
 ) implements Serializable {
   private static final long serialVersionUID = 1L;
 
