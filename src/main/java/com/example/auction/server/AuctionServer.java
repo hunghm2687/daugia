@@ -5,12 +5,25 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class AuctionServer {
 
     public static void main(String[] args) {
         final int PORT = 5000;
         ExecutorService executor = Executors.newCachedThreadPool();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            executor.shutdown();
+            try {
+                if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    executor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }));
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server đã mở tại port: " + PORT);

@@ -125,7 +125,7 @@ public class ClientSession implements Runnable {
       Object data =  msg.data();
 
       // Convert UserDTO → UserSession (nếu là login/signup)
-      if ("LOGIN".equals(msg.type()) || "SIGUP".equals(msg.type())) {
+      if ("LOGIN".equals(msg.type()) || "SIGNUP".equals(msg.type())) {
         UserDTO userDTO = (UserDTO) data;
 
         Role role = Role.valueOf(userDTO.role());  // "GUEST" → Role.GUEST
@@ -145,7 +145,7 @@ public class ClientSession implements Runnable {
         handler.handle(this, msg, tempSession);  // ← Pass UserSession
       }
       else {
-        // Handlers khác (BID, CREATE_AUCTION, ...)
+        // Handlers khác (BID, LOGOUT, GET_PRODUCTS_LIST, ...)
         var handler = HandlerFactory.getHandler(msg.type());
         handler.handle(this, msg, currentUserSession);
       }
