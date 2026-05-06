@@ -8,19 +8,16 @@ public class ArtItem extends Item {
     private int yearCreated; // năm tạo sp
 
     public ArtItem(String itemName, String mieutaItem, double startPrice, String sellerUsername, String artistName, int yearCreated) {
-        // khởi tạo artistName, yearCreated trước rồi mới ném throw để kh bị spotBugs chặn
-        this.artistName = artistName;
-        this.yearCreated = yearCreated;
-        // Sau đó validate (superclass constructor không throw)
         super(itemName, mieutaItem, startPrice, sellerUsername);
-
-        // Validate riêng cho ArtItem
+        // Validate ArtItem-specific fields
         if (artistName == null || artistName.trim().isEmpty()) {
             throw new IllegalArgumentException("Artist name không được để trống");
         }
         if (yearCreated <= 0 || yearCreated > java.time.Year.now().getValue()) {
             throw new IllegalArgumentException("Year created không hợp lệ");
         }
+        this.artistName = artistName;
+        this.yearCreated = yearCreated;
     }
 
     @Override

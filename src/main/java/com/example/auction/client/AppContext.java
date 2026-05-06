@@ -1,18 +1,19 @@
 package com.example.auction.client;
 
+import com.example.auction.shared.dto.MessageProtocol;
 import com.example.auction.shared.dto.UserDTO;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
  * AppContext - Singleton quản lý tài nguyên toàn app
  * - 1 Socket duy nhất
  * - 1 User session
- * - Thread-safe
+ * - Thread-safe sendAndReceive
  */
-
 public class AppContext {
   private static AppContext instance;
 
@@ -20,6 +21,9 @@ public class AppContext {
   private ObjectOutputStream out;
   private ObjectInputStream in;
   private UserDTO currentUser;
+
+  private static final int CONNECT_TIMEOUT_MS = 10_000;
+  private static final int READ_TIMEOUT_MS    = 30_000;
 
   private AppContext() {}
 
@@ -37,20 +41,25 @@ public class AppContext {
   // SOCKET
   public void connectToServer(String host, int port) throws Exception {
     if (socket == null || socket.isClosed()) {
-      this.socket = new Socket(host, port);
-      this.out = new ObjectOutputStream(socket.getOutputStream());
-      this.out.flush();
-      this.in = new ObjectInputStream(socket.getInputStream());
+      socket = new Socket();
+      socket.setSoTimeout(READ_TIMEOUT_MS);
+      socket.connect(new InetSocketAddress(host, port), CONNECT_TIMEOUT_MS);
+
+      out = new ObjectOutputStream(socket.getOutputStream());
+      out.flush();
+      in  = new ObjectInputStream(socket.getInputStream());
       System.out.println("Connected to server: " + host + ":" + port);
     }
   }
 
-  public ObjectOutputStream getOut() {
-    return out;
-  }
-
-  public ObjectInputStream getIn() {
-    return in;
+  /**
+   * Thread-safe request/response over the single socket.
+   * All controllers must use this method instead of accessing out/in directly.
+   */
+  public synchronized MessageProtocol sendAndReceive(MessageProtocol request) throws Exception {
+    out.writeObject(request);
+    out.flush();
+    return (MessageProtocol) in.readObject();
   }
 
   public boolean isConnected() {
@@ -59,8 +68,8 @@ public class AppContext {
 
   public void closeConnection() {
     try {
-      if (out != null) out.close();
-      if (in != null) in.close();
+      if (out    != null) out.close();
+      if (in     != null) in.close();
       if (socket != null) socket.close();
       System.out.println("Disconnected from server");
     } catch (Exception e) {
@@ -81,8 +90,13 @@ public class AppContext {
     return currentUser != null;
   }
 
-  public void logout() {
+  public void clearCurrentUser() {
     currentUser = null;
+  }
+
+  /** @deprecated use clearCurrentUser() */
+  public void logout() {
+    clearCurrentUser();
   }
 
   public String getCurrentUsername() {

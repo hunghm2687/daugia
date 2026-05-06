@@ -1,8 +1,8 @@
 package com.example.auction.client.view;
 
 import com.example.auction.client.AppContext;
+import com.example.auction.client.service.BidService;
 import com.example.auction.shared.dto.AuctionDTO;
-import com.example.auction.shared.dto.BidDTO;
 import com.example.auction.shared.dto.MessageProtocol;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,9 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.time.Instant;
 
 public class DetailController {
 
@@ -70,7 +67,6 @@ public class DetailController {
     seller.setText("Người bán: " + selectedAuction.sellerUsername());
     status.setText("Trạng thái: " + selectedAuction.status());
 
-    // Display image
     if (selectedAuction.itemImage() != null && !selectedAuction.itemImage().isEmpty()) {
       try {
         itemImage.setImage(new Image(selectedAuction.itemImage(), true));
@@ -81,7 +77,6 @@ public class DetailController {
       }
     }
 
-    // Update button
     if (!AppContext.getInstance().isLoggedIn()) {
       placeBidBtn.setDisable(true);
       placeBidBtn.setText("Vui lòng đăng nhập");
@@ -120,59 +115,37 @@ public class DetailController {
       return;
     }
 
-    // Send BID to server
+    final double finalAmount = amount;
     Thread thread = new Thread(() -> {
       try {
-        synchronized (AppContext.getInstance().getOut()) {
-          ObjectOutputStream out = AppContext.getInstance().getOut();
-          ObjectInputStream in = AppContext.getInstance().getIn();
+        MessageProtocol response = BidService.getInstance().placeBid(selectedAuction.id(), finalAmount);
 
-          BidDTO bidDTO = new BidDTO(
-            selectedAuction.id(),
-            AppContext.getInstance().getCurrentUsername(),
-            amount,
-            Instant.now(),
-            "SUCCESS"
-          );
+        Platform.runLater(() -> {
+          if ("SUCCESS".equals(response.status())) {
+            messageLabel.setText("Đặt giá thành công!");
+            bidAmount.clear();
 
-          MessageProtocol request = new MessageProtocol(
-            "BID", bidDTO, null, null
-          );
-
-          out.writeObject(request);
-          out.flush();
-
-          MessageProtocol response = (MessageProtocol) in.readObject();
-
-          Platform.runLater(() -> {
-            if ("SUCCESS".equals(response.status())) {
-              messageLabel.setText("Đặt giá thành công!");
-              bidAmount.clear();
-
-              // Update UI
-              selectedAuction = new AuctionDTO(
-                selectedAuction.id(),
-                selectedAuction.sellerUsername(),
-                selectedAuction.itemName(),
-                selectedAuction.startPrice(),
-                amount,
-                AppContext.getInstance().getCurrentUsername(),
-                selectedAuction.startTime(),
-                selectedAuction.endTime(),
-                selectedAuction.status(),
-                selectedAuction.bidCount() + 1,
-                selectedAuction.itemImage()
-              );
-              displayAuctionInfo();
-            } else {
-              messageLabel.setText(response.message());
-            }
-          });
-        }
+            // Update local auction state to reflect new bid
+            selectedAuction = new AuctionDTO(
+              selectedAuction.id(),
+              selectedAuction.sellerUsername(),
+              selectedAuction.itemName(),
+              selectedAuction.startPrice(),
+              finalAmount,
+              AppContext.getInstance().getCurrentUsername(),
+              selectedAuction.startTime(),
+              selectedAuction.endTime(),
+              selectedAuction.status(),
+              selectedAuction.bidCount() + 1,
+              selectedAuction.itemImage()
+            );
+            displayAuctionInfo();
+          } else {
+            messageLabel.setText(response.message());
+          }
+        });
       } catch (Exception e) {
-        Platform.runLater(() ->
-          messageLabel.setText("Lỗi server!")
-        );
+        Platform.runLater(() -> messageLabel.setText("Lỗi server!"));
         e.printStackTrace();
       }
     });

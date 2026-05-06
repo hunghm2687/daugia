@@ -3,68 +3,42 @@ package com.example.auction.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class AuctionServer {
 
-//    // Xử lý mỗi client connection
-//    private void clientHandler(Socket socket) {
-//        UserSession currentUserSession = new UserSession();
-//        try (var out = new ObjectOutputStream(socket.getOutputStream()); // out trước in tránh deadlock
-//             var in = new ObjectInputStream(socket.getInputStream())) { // lý do: để in wait với ObjectInputStream()
-//
-//            // nhận UserDTO từ client
-//            UserDTO currentUserSession = (UserDTO)  in.readObject();
-//
-//            // lấy handler phù hợp dựa trên requestType
-//            // ví duj: requestType = "LOG IN" -> LoginHandler, requestType = "SIGN UP" -> SignupHandler
-//            RequestHandler handler = HandlerFactory.getHandler(currentUserSession.requestType());
-//
-//            // goij handler để xử lý request
-//            handler.handle(currentUserSession , out);
-//        }catch (IOException e) {
-//            System.out.println("Client hoặc server đã ngắt kết nối!");
-//        }catch(ClassNotFoundException e) {
-//            System.out.println("Lớp không được hỗ trợ!");
-//        }catch (RequestTypeException e){
-//            System.out.println(e.getMessage());
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-    public void main(String[] args) {
+    public static void main(String[] args) {
         final int PORT = 5000;
+        ExecutorService executor = Executors.newCachedThreadPool();
 
-        // VirtualThread executor - mỗi task chạy trên 1 virtual thread
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-                System.out.println("Server đã mở tại port: " + PORT);
-                System.out.println("Waiting for client connections...");
-
-                // Vòng lặp vô hạn: lắng nghe client connections
-                while (true) {
-                    // serverSocket.accept() - chờ client kết nối
-                    // Khi client kết nối, trả về Socket đại diện cho connection đó
-                    Socket clientSocket = serverSocket.accept();
-                    System.out.println("Đã kết nối tới client: " + clientSocket.getInetAddress());
-                    System.out.println("Online now: " + ClientManager.getInstance().getOnlineCount());
-
-                    // ClientSession: Đại diện client connection
-                    ClientSession session = new ClientSession(clientSocket);
-
-                    // Gửi task xử lý client đến executor (chạy trên virtual thread)
-                    // - Tạo 1 virtual thread mới
-                    // - Chạy session.run() trên thread
-                    // - Mỗi client = 1 thread
-                    // - Threads chạy song song → handle multiple clients
-                    executor.submit(session);
-                    }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            executor.shutdown();
+            try {
+                if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    executor.shutdownNow();
                 }
-            catch (IOException e) {
-                System.err.println("Server error: " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("Client hoặc server đã ngắt kết nối!");
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
             }
+        }));
+
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server đã mở tại port: " + PORT);
+            System.out.println("Waiting for client connections...");
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Đã kết nối tới client: " + clientSocket.getInetAddress());
+                System.out.println("Online now: " + ClientManager.getInstance().getOnlineCount());
+
+                ClientSession session = new ClientSession(clientSocket);
+                executor.submit(session);
+            }
+        } catch (IOException e) {
+            System.err.println("Server error: " + e.getMessage());
         }
     }
 }
